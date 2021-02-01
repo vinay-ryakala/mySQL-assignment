@@ -1,0 +1,148 @@
+UC1
+ create database payroll_service;
+Query OK, 1 row affected (0.45 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.25 sec)
+
+mysql> use payroll_service;
+Database changed
+
+mysql> select database();
++-----------------+
+| database()      |
++-----------------+
+| payroll_service |
++-----------------+
+1 row in set (0.00 sec)
+
+UC2
+mysql> create table employee( id INT unsigned NOT NULL AUTO_INCREMENT, name VARCHAR(150) NOT NULL, salary Double NOT NULL, start DATE NOT NULL, PRIMARY KEY (id) );
+Query OK, 0 rows affected (2.46 sec)
+
+mysql> describe employee;
++--------+--------------+------+-----+---------+----------------+
+| Field  | Type         | Null | Key | Default | Extra          |
++--------+--------------+------+-----+---------+----------------+
+| id     | int unsigned | NO   | PRI | NULL    | auto_increment |
+| name   | varchar(150) | NO   |     | NULL    |                |
+| salary | double       | NO   |     | NULL    |                |
+| start  | date         | NO   |     | NULL    |                |
++--------+--------------+------+-----+---------+----------------+
+4 rows in set (0.09 sec)
+
+UC3
+mysql> insert into employee(name,salary,start) values
+    -> ('vinay',1000,'2020-01-20');
+    -> ('vin',100000,'2020-01-10');
+Query OK, 2 row affected (0.16 sec)
+
+UC5
+mysql> select * from employee where start BETWEEN CAST('2020-01-11' AS DATE) AND DATE(NOW());
++----+-------+--------+------------+
+| id | name  | salary | start      |
++----+-------+--------+------------+
+|  1 | vinay |   1000 | 2020-01-20 |
++----+-------+--------+------------+
+1 row in set (0.02 sec)
+
+UC6
+mysql> ALTER TABLE employee ADD gender CHAR(1) AFTER name;
+Query OK, 0 rows affected (2.96 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> update employee set gender ='M' where name ='vinay';
+Query OK, 1 row affected (0.39 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee set gender ='F' where name ='vin';
+Query OK, 1 row affected (0.16 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee
+    -> ;
++----+-------+--------+--------+------------+
+| id | name  | gender | salary | start      |
++----+-------+--------+--------+------------+
+|  1 | vinay | M      |   1000 | 2020-01-20 |
+|  2 | vin   | F      | 100000 | 2020-01-10 |
++----+-------+--------+--------+------------+
+2 rows in set (0.00 sec)
+mysql>  insert into employee(name,gender,salary,start) values  ('vina','M',100000,'2020-01-10');
+Query OK, 1 row affected (0.16 sec)
+
+mysql> select * from employee
+    -> ;
++----+-------+--------+--------+------------+
+| id | name  | gender | salary | start      |
++----+-------+--------+--------+------------+
+|  1 | vinay | M      |   1000 | 2020-01-20 |
+|  2 | vin   | F      | 100000 | 2020-01-10 |
+|  3 | vina  | M      | 100000 | 2020-01-10 |
++----+-------+--------+--------+------------+
+3 rows in set (0.03 sec)
+
+
+UC7
+mysql> select AVG(salary) FROM employee where gender = 'M' GROUP BY gender;
++-------------+
+| AVG(salary) |
++-------------+
+|       50500 |
++-------------+
+1 row in set (0.03 sec)
+
+mysql> select AVG(salary) FROM employee where gender = 'F' GROUP BY gender;
++-------------+
+| AVG(salary) |
++-------------+
+|      100000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select AVG(salary) FROM employee  GROUP BY gender;
++-------------+
+| AVG(salary) |
++-------------+
+|       50500 |
+|      100000 |
++-------------+
+2 rows in set (0.10 sec)
+
+mysql> select gender, AVG(salary) FROM employee  GROUP BY gender;
++--------+-------------+
+| gender | AVG(salary) |
++--------+-------------+
+| M      |       50500 |
+| F      |      100000 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select gender, COUNT(name) FROM employee  GROUP BY gender;
++--------+-------------+
+| gender | COUNT(name) |
++--------+-------------+
+| M      |           2 |
+| F      |           1 |
++--------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select gender, SUM(salary) FROM employee  GROUP BY gender;
++--------+-------------+
+| gender | SUM(salary) |
++--------+-------------+
+| M      |      101000 |
+| F      |      100000 |
++--------+-------------+
+2 rows in set (0.00 sec)
