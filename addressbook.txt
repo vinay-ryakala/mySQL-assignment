@@ -1,0 +1,275 @@
+# UC1 Create DataBase addressbook_servce
+
+mysql> CREATE DATABASE addressbook_service;
+Query OK, 1 row affected (0.13 sec)
+
+mysql> USE addressbook_service;
+Database changed
+mysql> SELECT DATABASE();
++---------------------+
+| DATABASE()          |
++---------------------+
+| addressbook_service |
++---------------------+
+1 row in set (0.00 sec)
+
+#UC2: Create table addressbook 
+mysql> CREATE TABLE addressbook(
+    -> id INT unsigned NOT NULL AUTO_INCREMENT,first_name  VARCHAR(50) NOT NULL,last_name   VARCHAR(50) NOT NULL,address     VARCHAR(50) NOT NULL, city        VARCHAR(50) NOT NULL, state       VARCHAR(50) NOT NULL, zip         INT unsigned NOT NULL,email       VARCHAR(50) NOT NULL,PRIMARY KEY (id));
+Query OK, 0 rows affected (1.76 sec)
+mysql> DESCRIBE addressbook;
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| id         | int unsigned | NO   | PRI | NULL    | auto_increment |
+| first_name | varchar(50)  | NO   |     | NULL    |                |
+| last_name  | varchar(50)  | NO   |     | NULL    |                |
+| address    | varchar(50)  | NO   |     | NULL    |                |
+| city       | varchar(50)  | NO   |     | NULL    |                |
+| state      | varchar(50)  | NO   |     | NULL    |                |
+| zip        | int unsigned | NO   |     | NULL    |                |
+| email      | varchar(50)  | NO   |     | NULL    |                |
++------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.05 sec)
+
+UC3: Ability to add Contacts into Addressbook
+mysql> INSERT INTO addressbook VALUES(1,'vinay','ryakala','hyd','sdnr','ts','509410','vin@g.com')
+	->(2,'kumar','ryaa','delhi','sdnr','dh','123456','kumar@gmail.com')
+	->(3,'hemanth','n','chennai','ls','tm','025698','heam@gmail.com');
+Query OK, 3 rows affected (0.10 sec)
+mysql> select * from addressbook ;
++----+------------+-----------+---------+------+-------+--------+-----------------+
+| id | first_name | last_name | address | city | state | zip    | email           |
++----+------------+-----------+---------+------+-------+--------+-----------------+
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com       |
+|  2 | kumar      | ryaa      | delhi   | sdnr | dh    | 123456 | kumar@gmail.com |
+|  3 | hemanth    | n         | chennai | ls   | tm    |  25698 | heam@gmail.com  |
++----+------------+-----------+---------+------+-------+--------+-----------------+
+3 rows in set (0.00 sec)
+
+#UC4 Edit data in table Addressbook
+mysql> UPDATE addressbook SET city = 'banglore' WHERE first_name = 'hemanth';
+Query OK, 1 row affected (0.26 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+#UC5 Delete record using person's name from table
+mysql> DELETE FROM addressbook WHERE first_name = 'hemanth';
+Query OK, 1 row affected (0.21 sec)
+
+#UC6 Retrive data from table address_book
+mysql> SELECT * FROM addressbook WHERE city = 'sdnr';
++----+------------+-----------+---------+------+-------+--------+-----------------+
+| id | first_name | last_name | address | city | state | zip    | email           |
++----+------------+-----------+---------+------+-------+--------+-----------------+
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com       |
+|  2 | kumar      | ryaa      | delhi   | sdnr | dh    | 123456 | kumar@gmail.com |
++----+------------+-----------+---------+------+-------+--------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT * FROM addressbook WHERE state = 'ts';
++----+------------+-----------+---------+------+-------+--------+-----------+
+| id | first_name | last_name | address | city | state | zip    | email     |
++----+------------+-----------+---------+------+-------+--------+-----------+
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com |
++----+------------+-----------+---------+------+-------+--------+-----------+
+1 row in set (0.00 sec)
+mysql> insert into addressbook values(3,'vivek','pol','chenni','ls','tm',12364,'vivek@g.com');
+-> insert into addressbook values(4,'sai','trja','hyd','sdnr','ts',123464,'sai@g.com');
+Query OK, 2 rows affected (0.12 sec)
+
+#UC7 COUNT the size of address_book by City and State
+ysql> SELECT COUNT(first_name) from addressbook WHERE city = 'sdnr';
++-------------------+
+| COUNT(first_name) |
++-------------------+
+|                 3 |
++-------------------+
+1 row in set (0.01 sec)
+mysql> SELECT COUNT(state) from addressbook WHERE state = 'dh';
++--------------+
+| COUNT(state) |
++--------------+
+|            1 |
++--------------+
+1 row in set (0.00 sec)
+
+#UC8 Retrieve entries sorted alphabetically by Person’s name from table
+mysql> SELECT *  from addressbook WHERE state = 'ts' order by first_name;
++----+------------+-----------+---------+------+-------+--------+-----------+
+| id | first_name | last_name | address | city | state | zip    | email     |
++----+------------+-----------+---------+------+-------+--------+-----------+
+|  4 | sai        | trja      | hyd     | sdnr | ts    | 123464 | sai@g.com |
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com |
++----+------------+-----------+---------+------+-------+--------+-----------+
+2 rows in set (0.00 sec)
+
+#UC9 Ability to identify each Address Book with name and Type.
+mysql> ALTER TABLE addressbook ADD name VARCHAR(50);
+Query OK, 0 rows affected (1.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE addressbook ADD type VARCHAR(50);
+Query OK, 0 rows affected (0.86 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  UPDATE addressbook set type = 'friends' where first_name = 'vinay' or first_name = 'sai';
+Query OK, 2 rows affected (0.06 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql>  UPDATE addressbook set type = 'family' where first_name = 'vivek' or first_name = 'kumar';
+Query OK, 2 rows affected (0.13 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from addressbook;
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+| id | first_name | last_name | address | city | state | zip    | email           | name | type    |
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com       | NULL | friends |
+|  2 | kumar      | ryaa      | delhi   | sdnr | dh    | 123456 | kumar@gmail.com | NULL | family  |
+|  3 | vivek      | pol       | chenni  | ls   | tm    |  12364 | vivek@g.com     | NULL | family  |
+|  4 | sai        | trja      | hyd     | sdnr | ts    | 123464 | sai@g.com       | NULL | friends |
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+4 rows in set (0.00 sec)
+
+#UC10 COUNT number of contacts by type
+mysql> SELECT COUNT(*) as COUNT from addressbook WHERE type = 'friends';
++-------+
+| COUNT |
++-------+
+|     2 |
++-------+
+1 row in set (0.00 sec)
+
+#UC11 Add contact to both Friend and Family
+mysql> insert into addressbook values('5','sai','trja','hyd','sdnr','ts',123464,'sai@g.com','','family');
+Query OK, 1 row affected (0.19 sec)
+mysql> select * from addressbook
+    ->  ;
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+| id | first_name | last_name | address | city | state | zip    | email           | name | type    |
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+|  1 | vinay      | ryakala   | hyd     | sdnr | ts    | 509410 | vin@g.com       | NULL | friends |
+|  2 | kumar      | ryaa      | delhi   | sdnr | dh    | 123456 | kumar@gmail.com | NULL | family  |
+|  3 | vivek      | pol       | chenni  | ls   | tm    |  12364 | vivek@g.com     | NULL | family  |
+|  4 | sai        | trja      | hyd     | sdnr | ts    | 123464 | sai@g.com       | NULL | friends |
+|  5 | sai        | trja      | hyd     | sdnr | ts    | 123464 | sai@g.com       |      | family  |
++----+------------+-----------+---------+------+-------+--------+-----------------+------+---------+
+5 rows in set (0.12 sec)
+
+mysql> CREATE database addressbookservice;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use addressbookservice;
+Database changed
+
+mysql> use addressbookservice;
+Database changed
+mysql> CREATE TABLE addressbook(
+    -> addressbook_id int NOT NULL,
+    ->  addressbook_name VARCHAR(150) NOT NULL,
+    -> PRIMARY KEY(addressbook_id)
+    ->  );
+Query OK, 0 rows affected (2.68 sec)
+
+mysql> CREATE TABLE person_details
+    -> (person_id int NOT NULL,person_name VARCHAR(150) NOT NULL,lastname VARCHAR(150) NOT NULL,PRIMARY KEY(person_id),addressbook_id int,FOREIGN KEY(addressbook_id) REFERENCES addressbook(addressbook_id));
+Query OK, 0 rows affected (1.48 sec)
+
+mysql> CREATE TABLE contact_details(person_id int,address VARCHAR(150),city VARCHAR(150),state VARCHAR(150),zip int,phone VARCHAR(100));
+Query OK, 0 rows affected (1.27 sec)
+
+mysql> ALTER TABLE contact_details add PRIMARY KEY(person_id);
+Query OK, 0 rows affected (2.39 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>  INSERT INTO addressbook VALUES (1, 'family');
+Query OK, 1 row affected (0.20 sec)
+
+mysql>  INSERT INTO addressbook VALUES (2, 'friends');
+Query OK, 1 row affected (0.07 sec)
+
+mysql>  INSERT INTO addressbook VALUES (1, 'family');
+Query OK, 1 row affected (0.20 sec)
+
+mysql>  INSERT INTO addressbook VALUES (2, 'friends');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> INSERT INTO person_details VALUES (1, 'Vinay', 'Ryakala', 1);
+Query OK, 1 row affected (0.17 sec)
+
+mysql> INSERT INTO person_details VALUES (1, 'Vivek', 'Po', 1);
+ERROR 1062 (23000): Duplicate entry '1' for key 'person_details.PRIMARY'
+mysql> INSERT INTO person_details VALUES (2, 'Vivek', 'Po', 1);
+Query OK, 1 row affected (0.23 sec)
+
+mysql> INSERT INTO person_details VALUES (3, 'Sai', 'Teja', 2);
+Query OK, 1 row affected (0.07 sec)
+
+mysql> INSERT INTO person_details VALUES (4, 'dhoni', 'praveen', 2);
+Query OK, 1 row affected (0.25 sec)
+
+mysql> SELECT * from person_details;
++-----------+-------------+----------+----------------+
+| person_id | person_name | lastname | addressbook_id |
++-----------+-------------+----------+----------------+
+|         1 | Vinay       | Ryakala  |              1 |
+|         2 | Vivek       | Po       |              1 |
+|         3 | Sai         | Teja     |              2 |
+|         4 | dhoni       | praveen  |              2 |
++-----------+-------------+----------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO contact_details VALUES (1, 'first', 'hyd', 'ts', 123456, '9876541');
+Query OK, 1 row affected (0.17 sec)
+
+mysql> INSERT INTO contact_details VALUES (2, 'sc', 'chenni', 'tm', 158976, '94568741');
+Query OK, 1 row affected (0.11 sec)
+
+mysql> INSERT INTO contact_details VALUES (3, 'th', 'ban', 'ks', 178946, '97447441');
+Query OK, 1 row affected (0.17 sec)
+
+mysql> INSERT INTO contact_details VALUES (4, 'fr', 'mum', 'mh', 8521476, '985743641');
+Query OK, 1 row affected (0.17 sec)
+
+mysql>  select * from contact_details;
++-----------+---------+--------+-------+---------+-----------+
+| person_id | address | city   | state | zip     | phone     |
++-----------+---------+--------+-------+---------+-----------+
+|         1 | first   | hyd    | ts    |  123456 | 9876541   |
+|         2 | sc      | chenni | tm    |  158976 | 94568741  |
+|         3 | th      | ban    | ks    |  178946 | 97447441  |
+|         4 | fr      | mum    | mh    | 8521476 | 985743641 |
++-----------+---------+--------+-------+---------+-----------+
+4 rows in set (0.00 sec)
+
+#UC13 Check retrieve queries for Normalized tables
+mysql> SELECT person_name from person_details inner join contact_details on person_details.person_id = contact_details.person_id where contact_details.state = 'tm';
++-------------+
+| person_name |
++-------------+
+| Vivek       |
++-------------+
+1 row in set (0.15 sec)
+
+ysql> SELECT person_name from person_details inner join contact_details on person_details.person_id = contact_details.person_id where contact_details.state = 'tm';
++-------------+
+| person_name |
++-------------+
+| Vivek       |
++-------------+
+1 row in set (0.15 sec)
+
+mysql> SELECT person_name from person_details inner join contact_details on person_details.person_id = contact_details.person_id  where contact_details.city = 'hyd';
++-------------+
+| person_name |
++-------------+
+| Vinay       |
++-------------+
+1 row in set (0.00 sec)
+mysql> SELECT COUNT(person_name) as count_city from person_details inner join contact_details on person_details.person_id = contact_details.person_id  where contact_details.city = 'hyd';
++------------+
+| count_city |
++------------+
+|          1 |
++------------+
+1 row in set (0.00 sec)
